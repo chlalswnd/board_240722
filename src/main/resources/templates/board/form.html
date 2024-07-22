@@ -1,0 +1,54 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="fragments/common :: head">-->
+<head th:replace="~{fragments/common :: head}">
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4" th:replace="~{fragments/common :: menu('board')}">
+
+</nav>
+    <main class="container">
+<!--        <form method="post" th:action="@{/board/form}" action="#">-->
+        <form method="post" th:action="@{/board/form}" action="#" th:object="${board}">
+            <input type="hidden" th:field="*{id}">
+            <div class="bg-body-tertiary p-5 rounded">
+                <h2>게시판</h2>
+                <div class="mb-3">
+                    <label for="title" class="form-label">제목</label>
+<!--                    <input type="text" class="form-control" id="title" name="title" th:field="*{title}">-->
+                    <input type="text" class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" id="title" name="title" th:field="*{title}">
+
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                        title Error
+                    </div>
+
+                    <label for="content" class="form-label">내용</label>
+<!--                    <textarea class="form-control" id="content" rows="3" name="content" th:field="*{content}"></textarea>-->
+                    <textarea class="form-control" th:classappend="${#fields.hasErrors('content')} ? 'is-invalid'" id="content" rows="3" name="content" th:field="*{content}"></textarea>
+
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+                        content Error
+                    </div>
+
+                </div>
+                <p class="text-end">
+                <button type="submit" class="btn btn-primary">확인</button>
+                <!--                    <button type="reset" class="btn btn-primary">취소</button>-->
+                <a type="reset" class="btn btn-primary" th:href="@{/board/list}">취소</a>
+                </p>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
+<!-- 22번째줄에 아래것들 결합한것 -->
+<!--                    <td th:if="${#fields.hasErrors('title')}" th:errors="*{title}">title Error</td>-->
+<!--<div class="col-md-6"> -->
+<!--    <label for="validationServer03" class="form-label">City</label> -->
+<!--    <input type="text" class="form-control is-invalid" id="validationServer03" aria-describedby="validationServer03Feedback" required> -->
+<!--    <div id="validationServer03Feedback" class="invalid-feedback"> -->
+<!--        Please provide a valid city. -->
+<!--    </div> -->
+<!--</div> -->
