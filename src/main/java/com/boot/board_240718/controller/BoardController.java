@@ -2,20 +2,23 @@ package com.boot.board_240718.controller;
 
 import com.boot.board_240718.model.Board;
 import com.boot.board_240718.repository.BoardRepository;
+import com.boot.board_240718.service.BoardService;
+import com.boot.board_240718.validator.BoardValidator;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import com.boot.board_240718.validator.BoardValidator;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/board")
@@ -26,6 +29,8 @@ public class BoardController {
     private BoardRepository boardRepository;
     @Autowired
     private BoardValidator boardValidator;
+    @Autowired
+    private BoardService boardService;
 
     @GetMapping("/list")
 //    public String list(Model model){
@@ -78,14 +83,19 @@ public class BoardController {
     @PostMapping("/form")
 //    public String form(@ModelAttribute Board board, Model model) {
     public String form(@Valid Board board, BindingResult bindingResult) {
-
+//        서버단에서 validation 체크
         boardValidator.validate(board, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return "board/form";
         }
 
-        boardRepository.save(board);
+//        스프링 시큐리티 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+//        boardRepository.save(board);
+        boardService.save(username, board);
 
         return "redirect:/board/list";
     }
