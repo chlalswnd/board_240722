@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,12 +22,14 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        csrf 공격 해제
+        http.csrf(CsrfConfigurer::disable);
         http
                 .authorizeHttpRequests((requests) -> requests
 //                        .requestMatchers("/", "/home).permitAll()
 //                        .requestMatchers("/").permitAll()
-//                        css, images 파일이 막히고, 회원가입 도 막혀서 추가 "/css/**", "/images/**, "/account/register"
-                        .requestMatchers("/", "/css/**", "/images/**", "/account/register").permitAll()
+//                        css, images 파일이 막히고, 회원가입 도 막혀서 추가 "/css/**", "/images/**, "/account/register", "/api/**"
+                        .requestMatchers("/", "/css/**", "/images/**", "/account/register", "/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
