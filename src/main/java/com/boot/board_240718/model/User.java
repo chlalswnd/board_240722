@@ -1,7 +1,7 @@
 package com.boot.board_240718.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,5 +29,12 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
 //    Set<Course> likedCourses;
+//    private List<Role> roles
+    @JsonIgnore
     private List<Role> roles = new ArrayList<>();
+
+//    한명의 사용자가 여러 게시글
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Board> boards = new ArrayList<>();
 }

@@ -13,16 +13,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @Slf4j
-public class BoardApiController {
-    //public class BoardApiController {
+public class UserApiController {
     @Autowired
-    private BoardRepository boardRepository;
+    private UserRepository userRepository;
 
-    @Secured("ROLE_ADMIN")
-    @DeleteMapping("/boards/{id}")
-    public void deleteBoard(@PathVariable Long id){
-        log.info("@# deleteBoard()");
+    @GetMapping("/users")
+    public List<User> all(@RequestParam(required = false) String method, @RequestParam(required = false) String text){
+        List<User> users = null;
+        if ("query".equals(method)){
+            users = userRepository.findByUsernameQuery(text);
+        } else {
+            users = userRepository.findAll();
+        }
 
-        boardRepository.deleteById(id);
+        return users;
     }
+
 }
